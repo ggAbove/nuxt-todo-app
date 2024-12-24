@@ -14,9 +14,6 @@ export default defineNuxtConfig({
     preference: 'system',
     fallback: 'light',
   },
-  nitro: {
-    preset: 'bun',
-  },
   eslint: {
     config: {
       autoInit: true,

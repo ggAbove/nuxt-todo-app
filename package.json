@@ -3,14 +3,14 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "bunx --bun nuxi build",
-    "dev": "bunx --bun nuxi dev --host",
-    "generate": "bunx --bun nuxi generate",
-    "preview": "bunx --bun nuxi preview",
-    "postinstall": "bunx --bun nuxi prepare",
+    "build": "nuxi build",
+    "dev": "nuxi dev --host",
+    "generate": "nuxi generate",
+    "preview": "nuxi preview",
+    "postinstall": "nuxi prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "update": "bunx --bun nuxi upgrade --force"
+    "update": "nuxi upgrade --force"
   },
   "dependencies": {
     "@nuxt/eslint": "0.7.4",

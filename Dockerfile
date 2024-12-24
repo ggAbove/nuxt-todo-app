@@ -1,26 +1,44 @@
-ARG NODE_IMAGE=oven/bun:1-alpine
+ARG NODE_VERSION=20.14.0
 
-FROM $NODE_IMAGE AS base
-WORKDIR /usr/src/app
-RUN apk --no-cache add openssh g++ make python3 git
+# Create build stage
+FROM node:${NODE_VERSION}-slim AS build
 
-FROM base AS install
-RUN mkdir -p /temp
-COPY package.json bun.lockb /temp/
-RUN cd /temp && bun install --frozen-lockfile
+# Enable pnpm
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-FROM install AS prerelease
-COPY --from=install /temp/node_modules node_modules
-COPY . .
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and pnpm-lock.yaml files to the working directory
+COPY ./package.json /app/
+COPY ./pnpm-lock.yaml /app/
+
+## Install dependencies
+RUN pnpm install --shamefully-hoist
+
+# Copy the rest of the application files to the working directory
+COPY . ./
+
+# Build the application
+RUN pnpm run build
+
+# Create a new stage for the production image
+FROM node:${NODE_VERSION}-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the output from the build stage to the working directory
+COPY --from=build /app/.output ./
+
+# Define environment variables
+ENV HOST=0.0.0.0
 ENV NODE_ENV=production
-RUN bun run build
 
-FROM base AS release
-WORKDIR /usr/src/app
-COPY --chown=bun:bun --from=install /temp/node_modules node_modules
-COPY --chown=bun:bun --from=prerelease /usr/src/app/.output /usr/src/app
-
-USER bun
-ENV HOST 0.0.0.0
+# Expose the port the application will run on
 EXPOSE 3000
-ENTRYPOINT ["bun", ".output/server/index.mjs"]
+
+# Start the application
+CMD ["node","/app/server/index.mjs"]
