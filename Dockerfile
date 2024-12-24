@@ -1,6 +1,6 @@
 ARG NODE_IMAGE=oven/bun:1-alpine
 
-FROM --platform=linux/amd64 $NODE_IMAGE AS base
+FROM $NODE_IMAGE AS base
 WORKDIR /usr/src/app
 RUN apk --no-cache add openssh g++ make python3 git
 

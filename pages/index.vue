@@ -1,7 +1,6 @@
 <!-- eslint-disable no-alert -->
 <script lang="ts" setup>
 import { useNotesStore } from '@/stores/notes'
-import { useRouter } from 'vue-router'
 
 const notesStore = useNotesStore()
 const notes = computed(() => notesStore.notes)
