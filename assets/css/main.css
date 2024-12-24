@@ -1,0 +1,15 @@
+html {
+  @apply bg-light text-black;
+}
+
+.dark {
+  @apply bg-dark text-white;
+}
+
+input {
+  @apply bg-transparent;
+}
+
+.container {
+  @apply p-4 mx-auto;
+}

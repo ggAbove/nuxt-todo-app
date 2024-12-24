@@ -1,0 +1,15 @@
+services:
+  nuxt-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_IMAGE: oven/bun:1-alpine 
+    ports:
+      - "3001:3001" 
+    environment:
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+    volumes:
+      - .:/usr/src/app:delegated # Optional for development, mount the code for live updates
+    restart: unless-stopped # Restart policy to ensure the container stays up
